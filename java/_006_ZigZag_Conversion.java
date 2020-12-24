@@ -42,27 +42,37 @@ public class _006_ZigZag_Conversion {
         }
         return res.toString();
     }
+
     public String convert_best(String s, int numRows) {
-        if (numRows == 1 || numRows >= s.length()) {
+        //周期变换（相邻间距2*numRows-2）;
+        //0_____6
+        //1___5_7
+        //2_4___8
+        //3_____9
+        int length = s.length();
+        if (numRows == 1 || numRows >= length) {
             return s;
         }
-        char[] chars = new char[s.length()];
-        //每列的长度
-        int colLen = 2 * (numRows - 1);
-        int n = s.length();
-        int index;
+        char[] chars = new char[length];
+        //每列的间距
+        int colLen = 2 * numRows - 2;
         //共有多少完整列
-        int minCol = n / colLen;
+        int minCol = length / colLen;
+        // 字符索引
         int ci = 0;
+        //二维数组第i行j列所对应字符在s中的位置
+        int index;
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < minCol + 1; j++) {
                 index = j * colLen + i;
-                if (index < s.length()) {
+                if (index < length) {
                     chars[ci++] = s.charAt(index);
                 }
+                // 除了第一行和最后一行相邻两元素所处的列的间距为2(numRows-1)外
+                // 中间行非最长列的相邻2个元素的间距为2 * (numRows - i - 1)
                 if (i != 0 && i != numRows - 1) {
-                    index = j * colLen + i + 2 * (numRows - i - 1);
-                    if (index < s.length())
+                    index = j * colLen + (i + 2 * (numRows - i - 1));
+                    if (index < length)
                         chars[ci++] = s.charAt(index);
                 }
             }
